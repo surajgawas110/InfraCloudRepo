@@ -9,3 +9,25 @@ services:
     - CSVSERVER_BORDER=Orange
     volumes:
       - ${PWD}/inputFile:/csvserver/inputdata
+    networks:
+      - mynet
+
+  prom:
+    container_name: prometheus
+    image: prom/prometheus:v2.22.0
+    ports:
+    - "9090:9090"
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ${PWD}/prom.yaml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - web
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    driver: bridge
+
+
